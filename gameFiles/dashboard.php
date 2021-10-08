@@ -1,7 +1,42 @@
+<div id="moves">
+  Moves: 0
+</div>
+<div id="winner" class="h1">
+
+</div>
+
+</div>
+<div style='position: fixed; top: 0em; right: 0em; background-color:white' class='border border-dark'>
+    <button>
+      <a href='index.php' style='width:150px;'>Logout</a>
+    </button>
+
+</div>
+<div id='resourceCount' style='position: fixed; top: 2em; right: 1em; pointer-events: none; background-color:white' class='border border-dark' readonly = 'readonly'>
+  <div id='woodCount'>Wood: <span id="woodSpan">0</span></div>
+  <div id='stoneCount'>Stone: <span id="stoneSpan">0</span></div>
+  <div id='leatherCount'>Leather: <span id="leatherSpan">0</span></div>
+  <div id='ironCount'>Iron: <span id="ironSpan">0</span></div>
+  <div id='alcoholCount'>Alcohol: <span id="alcoholSpan">0</span></div>
+</div>
+<div style='position: fixed; top: 10em; right: 1em; background-color:white' class='border border-dark'>
+    <button>
+      <img src="book.png" style='height:100px; width:100px;'/>
+      <div>Building and Crafting recipes</div>
+    </button>
+
+</div>
+<div id='playerFinal' class='flex-fill' style='width: 35px; height: 35px; background-color: black; z-index: 1; position: absolute;'></div>
+
 <?php
+//TODO: Create pop-up menu when Building and Crafting recipes is clicked
+$resourceOptions = ['wood', 'iron', 'alcohol', 'leather', 'stone', 'dirt'];
+
 
 $ret = "<div id='arena' class='border border-dark' style='height: 1750px; width: 1750px;'>";
+
 $ret = "<div id='boxesFinal' class='border border-dark' style='height: 1750px; width: 1750px;'>";
+
 for($i = 0; $i < 50; $i++){
   for($j = 0; $j < 50; $j++){
     //coordinates of each block
@@ -9,15 +44,45 @@ for($i = 0; $i < 50; $i++){
     $yCoord = $j * 35;
     $xString = $xCoord."px";
     $yString = $yCoord."px";
-    $ret .= "<div id='blocks' class='border border-primary' style='margin-left:$xString; margin-top:$yString;  height: 35px; width: 35px; position: absolute;'></div>";
+    $resource = rand(0, 99);
+
+    $resourceType = "";
+    if($resource < 85){
+      $resourceType = "dirt.png";
+      $resourceName = "dirt";
+    }
+    else if($resource > 84 && $resource < 90){
+      $resourceType = "wood.png";
+      $resourceName = "wood";
+
+    }
+    else if($resource > 89 && $resource < 95){
+      $resourceType="stone.png";
+      $resourceName = "stone";
+    }
+    else if($resource == 95 || $resource ==96){
+      $resourceType="iron.png";
+      $resourceName = "iron";
+    }
+    else if($resource == 97 || $resource ==98){
+      $resourceType="leather.png";
+      $resourceName = "leather";
+    }
+    else if($resource == 99){
+      $resourceType="alcohol.png";
+      $resourceName = "alcohol";
+    }
+
+    $ret .= "<div id='$xCoord $yCoord' class='border border-primary' style='z-index:-1; margin-left:$xString; margin-top:$yString;  height: 35px; width: 35px; position: absolute;'>";
+
+    $ret .="<img src=$resourceType name=$resourceName width='35' height='35'/>";
+
+    $ret .= "</div>";
   }
 }
-//$ret .= "<div id='blocks' class='border border-primary' style='marginTop=35 px; marginLeft=35 px; height: 35px; width: 35px;'></div>";
-
 
 $ret .= "</div>";
 $ret .= "</div>";
-
 
 echo $ret;
  ?>
@@ -30,82 +95,54 @@ echo $ret;
           <!-- CSS only -->
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 </head>
-
-<div id="moves">
-  Moves: 0
-</div>
-<div id="winner" class="h1">
-
-</div>
-<div id="arena" class="border border-dark" style="height: 700px; width: 700px;">
-<div id="boxes" class="border border-dark" style="height: 700px; width: 700px;">
-
-</div>
-<div id="player" class="flex-fill" style="width: 35px; height: 35px; background-color: black;">
-
-
-</div>
-</div>
-
-
-
 <script>
+
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
 
 n = 30;
 count = 0;
 x = 0;
-y = 700;
+y = 0;
 moves = 0;
 boxCoords = [];
+woodCount = 0;
+stoneCount = 0;
+ironCount = 0;
+alcoholCount = 0;
+leatherCount = 0;
 
 
 $(document).ready(function() {
   console.log(Date.now());
   onLoad = Date.now();
-  var player = document.createElement('div');
-  player.style.height = '35px';
-  player.style.width = '35px';
-  player.style.backgroundColor = "black";
-  player.style.marginTop = 0;
-  player.style.marginRight = 0;
 
-  for(i = 0; i < n; i++){
-    var xCoord = Math.floor(Math.random()*25)*35;
-    var yCoord = Math.floor(Math.random()*25)*35;
-    while (xCoord > 665){
-      xCoord = Math.floor(Math.random()*25)*35;
-    }
-    while (yCoord > 665){
-      yCoord = Math.floor(Math.random()*25)*35;
-    }
-    var box = document.createElement('div');
-    var pic = document.createElement('img');
-    pic.setAttribute("id", "pic");
-    pic.src = "gold.png";
-    pic.setAttribute("width", "35");
-    pic.setAttribute("height", "35");
+  //Every 10 seconds, query the database to update the user totals for resources
+  (function updateResourceList() {
+  $.ajax({
+    type: 'POST',
+    url: 'updateResources.php',
+    data: {
+      func:"updateResources",
+    },
+    success: function(data) {
+      console.log("resources updated");
+      var parsedData = JSON.parse(data);
 
-    box.setAttribute('id', xCoord + " " + yCoord);
-    box.style.backgroundColor = "blue";
-    box.style.position = 'absolute';
-    box.style.height = '35px';
-    box.style.width = '35px';
-    box.style.marginTop = yCoord;
-    box.style.marginLeft= xCoord;
-    box.style.zIndex = -1;
-    box.append(pic);
-
-    document.querySelector('#boxes').append(box);
-    if(boxCoords.hasOwnProperty(xCoord)){
-      console.log("Duplicate");
-      boxCoords[xCoord].push(yCoord);
+      $('#woodSpan').html(parsedData['wood']);
+      $('#stoneSpan').html(parsedData['stone']);
+      $('#leatherSpan').html(parsedData['leather']);
+      $('#ironSpan').html(parsedData['iron']);
+      $('#alcoholSpan').html(parsedData['alcohol']);
+    },
+    complete: function() {
+      // Schedule the next request when the current one's complete
+      setTimeout(updateResourceList, 5000);
     }
-    else{
-      boxCoords[xCoord] = [yCoord];
-    }
-
-  }
-  console.log(boxCoords);
+  });
+})();
  });
 
 document.onkeydown = function (event) {
@@ -118,7 +155,7 @@ document.onkeydown = function (event) {
          moves++;
          document.getElementById("moves").innerHTML = "Moves: " + moves;
          x -= 35;
-         $('#player').css({marginLeft: '-=35px'});
+         $('#playerFinal').css({marginLeft: '-=35px'});
          break;
       case 38:
          console.log("Up key is pressed.");
@@ -128,53 +165,128 @@ document.onkeydown = function (event) {
          moves++;
          document.getElementById("moves").innerHTML = "Moves: " + moves;
          y -= 35;
-         $('#player').css({marginTop: '-=35px'});
+         $('#playerFinal').css({marginTop: '-=35px'});
          break;
       case 39:
          console.log("Right key is pressed.");
-         if(x == 665){
+         if(x == 1715){
            break;
          }
          moves++;
          document.getElementById("moves").innerHTML = "Moves: " + moves;
          x += 35;
-         $('#player').css({marginLeft: '+=35px'});
+         $('#playerFinal').css({marginLeft: '+=35px'});
          break;
       case 40:
          console.log("Down key is pressed.");
-         if(y == 665){
+         if(y == 1715){
            break;
          }
          moves++;
          document.getElementById("moves").innerHTML = "Moves: " + moves;
          y += 35;
-         $('#player').css({marginTop: '+=35px'});
+         $('#playerFinal').css({marginTop: '+=35px'});
          break;
    }
 
-   console.log(boxCoords[x]);
    console.log(x);
    console.log(y);
-   if(typeof(boxCoords[x]) !== 'undefined'){
-     //remove that bluediv
-     for(k = 0; k < boxCoords[x].length; k++){
-       if(boxCoords[x][k] == y){
-         console.log("on a blue box");
-         var boxRemove = document.getElementById(x + " " + y);
-         boxRemove.style.backgroundColor = "red";
-         boxRemove.innerHTML = "";
-         var picSeen = document.createElement("img");
-         picSeen.setAttribute("width", "35");
-         picSeen.setAttribute("height", "35");
-         picSeen.setAttribute("src", "dirt.png");
 
-         boxRemove.appendChild(picSeen);
-         count++;
-         delete boxCoords[x][k];
-         break;
-         console.log(boxCoords);
+   var tile = document.getElementById(x + " " + y);
+
+
+   var child = tile.firstChild;
+
+   if(child.name == "dirt"){
+     console.log("It's dirt!!!");
+   }
+   else if(child.name == "wood"){
+     woodCount += 1;
+     child.setAttribute("name", "dirt");
+     child.setAttribute("src", "dirt.png");
+
+     $.ajax({
+       type: "POST",
+       url: "updateResources.php",
+       data: {
+         func: "wood",
+         player_id: "1" //TODO: make this not hardcoded
+       },
+       success: function(result) {
+           console.log(result);
        }
-     }
+     });
+   }
+   else if(child.name == "stone"){
+     stoneCount += 1;
+     child.setAttribute("name", "dirt");
+     child.setAttribute("src", "dirt.png");
+
+     $.ajax({
+       type: "POST",
+       url: "updateResources.php",
+       data: {
+         func: "stone",
+         player_id: "1" //TODO: make this not hardcoded
+       },
+       success: function(result) {
+           console.log(result);
+       }
+     });
+   }
+   else if(child.name == "iron"){
+     ironCount += 1;
+     child.setAttribute("name", "dirt");
+     child.setAttribute("src", "dirt.png");
+
+     $.ajax({
+       type: "POST",
+       url: "updateResources.php",
+       data: {
+         func: "iron",
+         player_id: "1" //TODO: make this not hardcoded
+       },
+       success: function(result) {
+           console.log(result);
+       }
+     });
+   }
+   else if(child.name == "leather"){
+     leatherCount += 1;
+     child.setAttribute("name", "dirt");
+     child.setAttribute("src", "dirt.png");
+
+     $.ajax({
+       type: "POST",
+       url: "updateResources.php",
+       data: {
+         func: "leather",
+         player_id: "1" //TODO: make this not hardcoded
+       },
+       success: function(result) {
+           console.log(result);
+       }
+     });
+   }
+   else if(child.name == "alcohol"){
+     alcoholCount += 1;
+     child.setAttribute("name", "dirt");
+     child.setAttribute("src", "dirt.png");
+
+     $.ajax({
+       type: "POST",
+       url: "updateResources.php",
+       data: {
+         func: "alcohol",
+         player_id: "1" //TODO: make this not hardcoded
+       },
+       success: function(result) {
+           console.log(result);
+       }
+     });
+   }
+   else{
+     test = 0;
    }
 
    if(count == n){
@@ -182,8 +294,6 @@ document.onkeydown = function (event) {
      console.log(onWin - onLoad);
      var time = (onWin - onLoad) / 1000;
      document.getElementById("winner").innerHTML = "Congrats, you won!  Number of moves: " + moves + " Time Taken: " + time;
-
    }
 };
-
 </script>
