@@ -9,6 +9,23 @@
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 </head>
 
+<?php
+
+include("src/functions.php");
+
+
+if(isset($_POST) && count($_POST) == 2){
+
+  $username = $_POST['userName'];
+  $password = $_POST['password'];
+
+  login($username, $password);
+}
+
+
+
+
+ ?>
 <html>
 
 <div id="frown" class="d-flex justify-content-center" style="height: 15%; width: 100%;">
@@ -25,17 +42,19 @@
   <img src="firstMouth.png" alt=""/>
 </div>
 
-<form action="dashboard.php">
+<form method='post' action=''>
   <div class='d-flex justify-content-center'>
-    <input id="field" type="text" style='width: 400px; height: 50px; font-size:20px;' placeholder='Username' autocomplete='off'/>
+    <input id="field" name='userName' type="text" style='width: 400px; height: 50px; font-size:20px;' placeholder='Username' autocomplete='off'/>
   </div>
 <div class='d-flex justify-content-center' id="password" onClick='passwordSelect()'>
-  <input id="password" type="password" style='width: 400px; height: 50px; font-size:20px;' placeholder='Password' autocomplete='off'/>
+  <input id="password" name='password' type="password" style='width: 400px; height: 50px; font-size:20px;' placeholder='Password' autocomplete='off'/>
 </div>
 <div class='d-flex justify-content-center'>
-  <button type='submit' class='d-flex justify-content-center' style='width: 400px; height: 50px;' >Login</button>
+  <input type='submit' class='d-flex justify-content-center' style='width: 400px; height: 50px;' />
 </div>
 </form>
+
+<a href='createAccount.php' class='d-flex justify-content-center'>Create Account</a>
 </html>
 
 <script>
