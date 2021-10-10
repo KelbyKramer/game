@@ -1,0 +1,96 @@
+{
+  "town_hall":{
+      "resources":{
+        "wood": 100,
+        "stone": 50,
+        "iron": 50,
+        "gold": 10,
+        "wool": 25,
+        "leather": 10
+      },
+      "prestige": 100
+  },
+  "brewery":{
+      "resources":{
+        "wood": 50,
+        "stone": 25,
+        "alcohol": 25,
+        "herbs":25,
+        "water":25
+      },
+      "prestige": 75
+  },
+  "butcher":{
+      "resources":{
+        "wood": 50,
+        "stone": 25,
+        "leather": 25,
+        "herbs": 25
+      },
+      "prestige": 60
+  },
+  "lumberMill":{
+      "resources":{
+        "wood": 150,
+        "stone": 50,
+        "iron": 50
+      },
+      "prestige": 85
+  },
+  "blacksmith":{
+      "resources":{
+        "wood": 100,
+        "stone": 50,
+        "iron": 100
+      },
+      "prestige": 85
+  },
+  "herbalist":{
+      "resources":{
+        "wood": 100,
+        "stone": 50,
+        "herbs": 50,
+        "water": 50,
+        "alcohol": 50
+      },
+      "prestige": 90
+  },
+  "cemetery":{
+      "resources":{
+        "wood": 25,
+        "stone": 150,
+        "iron": 25
+      },
+      "prestige": 75
+  },
+  "chapel":{
+      "resources":{
+        "wood": 100,
+        "stone": 50,
+        "wool": 50,
+        "gold": 5
+      },
+      "prestige": 100
+  },
+  "school":{
+      "resources":{
+        "wood": 50,
+        "stone": 25,
+        "iron": 10,
+        "wool": 20,
+        "water": 20,
+        "coal": 10
+      },
+      "prestige": 50
+  },
+  "tailor":{
+      "resources":{
+        "wood": 50,
+        "stone": 25,
+        "wool": 20,
+        "water": 20,
+        "leather": 25
+      },
+      "prestige": 50
+  }
+}

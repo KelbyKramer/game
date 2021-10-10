@@ -38,16 +38,10 @@ if(isset($_POST) && count($_POST) > 0){
     echo "Username is alreay taken";
     $errorCount++;
   }
-
-
   //At this point, the user has created a valid Account
   if($errorCount == 0){
     registerUser($username, $password, $email);
   }
-
-    //$sql = "INSERT INTO persons (Username, Password, email) VALUES ('$username', '$password', '$email')";
-    //$conn = dbConnect();
-    //$result = $conn->query($sql);
 
 }
 

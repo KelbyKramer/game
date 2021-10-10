@@ -22,9 +22,6 @@ if(isset($_POST) && count($_POST) == 2){
   login($username, $password);
 }
 
-
-
-
  ?>
 <html>
 
@@ -39,7 +36,7 @@ if(isset($_POST) && count($_POST) == 2){
 </center>
 
 <div id="container" class="d-flex justify-content-center h-25">
-  <img src="firstMouth.png" alt=""/>
+  <img src="./src/images/firstMouth.png" alt=""/>
 </div>
 
 <form method='post' action=''>
@@ -65,8 +62,8 @@ var count = 0;
 
 function passwordSelect(){
   console.log("selected");
-  document.getElementById("frown").innerHTML = '<img src=\'mad.png\'>';
-  document.getElementById("container").innerHTML = '<img src=\'frown.png\'>';
+  document.getElementById("frown").innerHTML = '<img src=\'./src/images/mad.png\'>';
+  document.getElementById("container").innerHTML = '<img src=\'./src/images/frown.png\'>';
 
   var eye = $(".eye");
   eye.css({
@@ -129,15 +126,15 @@ document.getElementById("field").addEventListener('keydown', e => {
     }
 
     if(count < 0){
-      document.getElementById("container").innerHTML = '<img src=\'firstMouth.png\'>';
+      document.getElementById("container").innerHTML = '<img src=\'./src/images/firstMouth.png\'>';
     }
     if(count < -12){
       //change to second mouth
-      document.getElementById("container").innerHTML = '<img src=\'secondMouth.png\'>';
+      document.getElementById("container").innerHTML = '<img src=\'./src/images/secondMouth.png\'>';
     }
     if(count < -24){
       //change to third mouth
-      document.getElementById("container").innerHTML = '<img src=\'thirdMouth.png\'>';
+      document.getElementById("container").innerHTML = '<img src=\'./src/images/thirdMouth.png\'>';
     }
 
   });
