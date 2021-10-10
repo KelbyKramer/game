@@ -50,7 +50,7 @@ if(isset($_POST) && count($_POST) > 0){
 
  ?>
 
-
+<center>
  <form method='post' action=''>
 
   <div class='d-flex justify-content-center'>
@@ -70,3 +70,4 @@ if(isset($_POST) && count($_POST) > 0){
  </div>
 
  </form>
+</center>

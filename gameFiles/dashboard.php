@@ -11,83 +11,99 @@ if($player_id != $_SESSION['player_id']){
   Moves: 0
 </div>
 
+
 <div style='position: fixed; top: 0em; right: 0em; background-color:white' class='border border-dark'>
     <button>
       <a href='logout.php' style='width:150px;'>Logout</a>
     </button>
 </div>
 
-<div id='resourceCount' style='position: fixed; top: 2em; right: 1em; pointer-events: none; background-color:white' class='border border-dark' readonly = 'readonly'>
-  <div id='woodCount'>Wood: <span id="woodSpan">0</span></div>
-  <div id='stoneCount'>Stone: <span id="stoneSpan">0</span></div>
-  <div id='leatherCount'>Leather: <span id="leatherSpan">0</span></div>
-  <div id='ironCount'>Iron: <span id="ironSpan">0</span></div>
-  <div id='alcoholCount'>Alcohol: <span id="alcoholSpan">0</span></div>
-  <div id='waterCount'>Water: <span id="waterSpan">0</span></div>
-  <div id='coalCount'>Coal: <span id="coalSpan">0</span></div>
-  <div id='flintCount'>Flint: <span id="flintSpan">0</span></div>
-  <div id='woolCount'>Wool: <span id="woolSpan">0</span></div>
-  <div id='herbsCount'>Herbs: <span id="herbsSpan">0</span></div>
-  <div id='goldCount'>Gold: <span id="goldSpan">0</span></div>
-</div>
+  <div id='resourceCount' style='position: fixed; top: 2em; right: 1em; pointer-events: none; background-color:white' class='border border-dark' readonly = 'readonly'>
+    <div id='woodCount'>Wood: <span id="woodSpan">0</span></div>
+    <div id='stoneCount'>Stone: <span id="stoneSpan">0</span></div>
+    <div id='leatherCount'>Leather: <span id="leatherSpan">0</span></div>
+    <div id='ironCount'>Iron: <span id="ironSpan">0</span></div>
+    <div id='alcoholCount'>Alcohol: <span id="alcoholSpan">0</span></div>
+    <div id='waterCount'>Water: <span id="waterSpan">0</span></div>
+    <div id='coalCount'>Coal: <span id="coalSpan">0</span></div>
+    <div id='flintCount'>Flint: <span id="flintSpan">0</span></div>
+    <div id='woolCount'>Wool: <span id="woolSpan">0</span></div>
+    <div id='herbsCount'>Herbs: <span id="herbsSpan">0</span></div>
+    <div id='goldCount'>Gold: <span id="goldSpan">0</span></div>
+  </div>
 
-<button type="button" style='position: fixed; top: 20em; right: 1em; height:150px; width:150px; background-color:white;' data-toggle="modal" data-target="#myModal">
-  <img src='./src/images/book.png' style='height:100px; width:100px;'/>
-  <div>Building and Crafting Recipes</div>
-</button>
+  <button type="button" style='position: fixed; top: 20em; right: 1em; height:150px; width:150px; background-color:white;' data-toggle="modal" data-target="#myModal">
+    <img src='./src/images/book.png' style='height:100px; width:100px;'/>
+    <div>Building and Crafting Recipes</div>
+  </button>
 
+  <button type="button" style='position: fixed; top: 30em; right: 1em; height:150px; width:150px; background-color:white;' data-toggle="modal" data-target="#leaderboard">
+    <img src='./src/images/village.png' style='height:100px; width:100px;'/>
+    <div>Leaderboard</div>
+  </button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Recipes</h4>
-                  </div>
-                  <div class="modal-body">
-                    <?php
-                      echo generateBuildingInfo("town_hall", "Town Hall");
-                      echo generateBuildingInfo("brewery", "Brewery");
-                      echo generateBuildingInfo("butcher", "Butcher");
-                      echo generateBuildingInfo("tailor", "Tailor");
-                      echo generateBuildingInfo("lumberMill", "Lumber Mill");
-                      echo generateBuildingInfo("blacksmith", "Blacksmith");
-                      echo generateBuildingInfo("herbalist", "Herbalist");
-                      echo generateBuildingInfo("cemetery", "Cemetery");
-                      echo generateBuildingInfo("chapel", "Chapel");
-                      echo generateBuildingInfo("school", "School");
-                     ?>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-<!--TODO: Have this button contain village statistics and information -->
-
-
-<button type="button" style='position: fixed; top: 30em; right: 1em; height:150px; width:150px; background-color:white;' data-toggle="modal" data-target="#villageStats">
-
-  <img src='./src/images/village.png' style='height:100px; width:100px;'/>
-  <div>Village Statistics</div>
-</button>
-
-<div class="modal fade" id="villageStats" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        <div id="confirmMessage"></div>
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">Recipes</h4>
       </div>
       <div class="modal-body">
-          <div>
-            Here is where the meat and potatoes of the crafting recipes will go
-          </div>
+        <?php
+          echo generateBuildingInfo("town_hall", "Town Hall");
+          echo generateBuildingInfo("brewery", "Brewery");
+          echo generateBuildingInfo("butcher", "Butcher");
+          echo generateBuildingInfo("tailor", "Tailor");
+          echo generateBuildingInfo("lumberMill", "Lumber Mill");
+          echo generateBuildingInfo("blacksmith", "Blacksmith");
+          echo generateBuildingInfo("herbalist", "Herbalist");
+          echo generateBuildingInfo("cemetery", "Cemetery");
+          echo generateBuildingInfo("chapel", "Chapel");
+          echo generateBuildingInfo("school", "School");
+         ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="modal fade" id="leaderboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Global Leaderboard</h4>
+      </div>
+      <div class="modal-body">
+          <div>
+            <?php
+              $sql = "SELECT resources.player_id, resources.prestige, persons.Username FROM resources INNER JOIN persons ON resources.player_id=persons.player_id";
+              $conn = dbConnect();
+
+              $result = $conn->query($sql);
+              $unsortedArray = array();
+              if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                  $unsortedArray[$row['Username']] = $row['prestige'];
+                }
+              }
+              arsort($unsortedArray);
+              //TODO: Make this look better
+              foreach($unsortedArray as $key=>$value){
+                $ret = "";
+                $ret .="<div>";
+                $ret .= $key." ".$value;
+                $ret .= "</div>";
+                echo $ret;
+              }
+             ?>
+          </div>
         </div>
-          Power: 0 power
       </div>
 
       </div>
@@ -98,9 +114,12 @@ if($player_id != $_SESSION['player_id']){
   </div>
 </div>
 
+<div class='d-flex justify-content-center'>
+  <button type="button" class="btn btn-warning " style="width:300px; height:75px;" onClick="window.location.reload();"><span class="h1" style="color:black;">Refresh Pit</span></button>
+</div>
+
 <div id="overlay"></div>
 <div id='playerFinal' class='flex-fill' style='width: 35px; height: 35px; background-color: black; z-index: 1; position: absolute;'>
-
   <img src="./src/images/player.png" style='width:35px; height:35px;'/>
 </div>
 

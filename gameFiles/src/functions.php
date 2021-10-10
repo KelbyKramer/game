@@ -26,10 +26,7 @@ function login($username, $password){
     }
   }
   else{
-    //login credentials were not successful
-    //header("location: restrict.php");
-    echo "Credentials were not successful";
-    echo $password;
+    echo "<center>Credentials were not successful</center>";
   }
 }
 
@@ -81,6 +78,101 @@ function updateResourceCount($resource, $player_id){
 
 }
 
+function craftBuilding($building){
+  $buildings = file_get_contents("./src/buildings.json", "buildings");
+  $buildingsArray = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $buildings), true );
+
+  $resourcesArray = $buildingsArray[$building]['resources'];
+  $sql = "SELECT ";
+  $x = 1;
+  foreach($resourcesArray as $resource=>$value){
+    if($x == count($resourcesArray)){
+      $sql .= $resource." ";
+    }
+    else{
+      $sql .= $resource.", ";
+    }
+    $x++;
+  }
+  $sql .= " FROM resources WHERE player_id=".$_POST['player_id'];
+  //echo $sql;
+
+  $conn = dbConnect();
+  $result = $conn->query($sql);
+
+  $array = array();
+  if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+      //TODO: FIgure this out and use JSON object to advantage
+      $array = $row;
+    }
+  }
+
+  $player_id = $_POST['player_id'];
+  $sql = "SELECT $building FROM buildings WHERE player_id=".$player_id;
+  $result = $conn->query($sql);
+
+  if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+      $level = $row[$building];
+    }
+  }
+  $level++;
+  $craftable = true;
+  foreach($array as $key=>$value){
+    if($array[$key] >= $resourcesArray[$key] * $level){
+      //have enough of that resource
+      //echo "There is enough";
+    }
+    else{
+      //Don't have enough of that resource
+      $craftable = false;
+      //echo "There is not enough ".$key;
+    }
+  }
+
+  //echo $craftable;
+
+  if($craftable){
+    //subtract values and update them in database
+    //update level in buildings table
+    foreach($array as $key=>$value){
+      $array[$key] -= $resourcesArray[$key] * $level;
+      //echo $key." ".$array[$key];
+    }
+
+    $sql = "SELECT prestige FROM resources WHERE player_id=".$_POST['player_id'];
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+        $prestige = $row['prestige'];
+      }
+    }
+    //echo "Prestige: ".$prestige;
+    $prestige += $buildingsArray[$building]['prestige'];
+
+    $sql = "UPDATE resources SET ";
+
+    foreach($array as $resource=>$value){
+      $sql .= $resource."=".$array[$resource].", ";
+    }
+
+    $sql .= " prestige=$prestige WHERE player_id=".$_POST['player_id'];
+    $result = $conn->query($sql);
+    //echo $sql;
+    $sql = "UPDATE buildings SET $building=$level WHERE player_id=$player_id";
+    $result = $conn->query($sql);
+    //echo $sql;
+    echo "Building Upgraded!";
+    //TODO: after crafting, update necessary resources in real time
+  }
+  else{
+    echo "Insufficient Resources!";
+    //TODO: Display on screen which resources are lacking
+  }
+}
+
 function generateResourceList($buildingFileName){
   $resourceArray = file_get_contents("./src/buildings.json", "buildings");
   $JSONArray = json_decode($resourceArray, true);
@@ -99,13 +191,13 @@ function generateResourceList($buildingFileName){
   $ret = "";
   $ret .= "<ul class='float-right'>";
 
+  $ret .= "<li style='background-color:#b5c308;'>Level ".$level."</li>";
   foreach($listOfResources as $key => $value){
     $quantity = ($level + 1) * $value;
     $ret .= "<li>".$quantity."x ".$key."</li>";
   }
   $prestige = ($level + 1) * $prestige;
-  //TODO: Make this a more distinct list element
-  $ret .= "<li>".$prestige."x Prestige</li>";
+  $ret .= "<li style='background-color:#03ea0d;'>".$prestige."x Prestige</li>";
 
   $ret .= "</ul>";
   return $ret;

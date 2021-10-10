@@ -6,10 +6,13 @@ $conn = dbConnect();
 
 if(isset($_POST['craft'])){
   $building = $_POST['craft'];
-  $buildings = file_get_contents("./src/buildings.json", "buildings");
-  $buildingsArray = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $buildings), true );
+  //$buildings = file_get_contents("./src/buildings.json", "buildings");
+  //$buildingsArray = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $buildings), true );
   //var_dump($decodedObject);
   //var_dump($buildings);
+
+  craftBuilding($building);
+  /*
   switch($building){
     case 'town_hall':
       //Read in JSON file
@@ -83,7 +86,7 @@ if(isset($_POST['craft'])){
         echo "Can't be crafted";
       }
       break;
-  }
+  }*/
 }
 
 if(isset($_POST['func'])){

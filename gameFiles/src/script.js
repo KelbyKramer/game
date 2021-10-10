@@ -12,6 +12,7 @@ function craftBuilding(building){
     },
     success: function(result) {
         console.log(result);
+        $('#confirmMessage').html(result);
     }
   });
 }
